@@ -28,5 +28,13 @@ describe("app", () => {
           });
         });
     });
+    test("Status 404: returns invalid path message", () => {
+      return request(app)
+        .get("/api/not_an_endpoint")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("invalid path");
+        });
+    });
   });
 });
