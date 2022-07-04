@@ -29,4 +29,21 @@ describe("app", () => {
         });
     });
   });
+  describe("GET /api/articles/:article_id", () => {
+    test("status 2: returns an object containing article information", () => {
+      return request(app)
+        .get("/api/articles/6")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.park).toEqual({
+            article_id: 6,
+            title: A,
+            body: "Delicious tin of cat food",
+            topic: "mitch",
+            created_at: "2020-10-18 02:00:00",
+            votes: 0,
+          });
+        });
+    });
+  });
 });
