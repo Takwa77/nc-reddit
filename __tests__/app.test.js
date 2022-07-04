@@ -8,9 +8,7 @@ beforeEach(() => {
   return seed(testData);
 });
 
-afterAll(() => {
-  return db.end();
-});
+afterAll(() => db.end());
 
 describe("app", () => {
   describe("GET /api/topics", () => {
@@ -21,10 +19,12 @@ describe("app", () => {
         .then(({ body }) => {
           expect(body).toHaveLength(3);
           body.forEach((topic) => {
-            expect.objectContaining({
-              description: expect.any(String),
-              slug: expect.any(String),
-            });
+            expect(topic).toEqual(
+              expect.objectContaining({
+                description: expect.any(String),
+                slug: expect.any(String),
+              })
+            );
           });
         });
     });
