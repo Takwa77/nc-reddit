@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const request = require("supertest");
 const app = require("../app");
+const { patch } = require("../app");
 
 beforeEach(() => {
   return seed(testData);
@@ -68,6 +69,26 @@ describe("app", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("bad request");
+        });
+    });
+  });
+  describe("PATCH /api/articles/:article_id", () => {
+    test("status 200: returns updated article", () => {
+      const increment = { inc_votes: 100 };
+      return request(app)
+        .patch("/api/articles/6")
+        .send(increment)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toEqual({
+            article_id: 6,
+            title: "A",
+            author: "icellusedkars",
+            body: "Delicious tin of cat food",
+            topic: "mitch",
+            created_at: "2020-10-18T01:00:00.000Z",
+            votes: 100,
+          });
         });
     });
   });
