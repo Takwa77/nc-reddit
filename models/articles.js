@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const articles = require("../db/data/test-data/articles");
 
 exports.selectArticleByID = (article_id) => {
   return db
@@ -24,5 +25,20 @@ exports.patchArticleVote = (article_id, inc_votes) => {
     )
     .then(({ rows }) => {
       return rows[0];
+    });
+};
+
+exports.selectArticles = () => {
+  return db
+    .query(
+      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.article_id):: INT AS comment_count 
+      FROM articles
+      LEFT JOIN comments ON articles.article_id = comments.article_id
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;`
+    )
+    .then((articles) => {
+      console.log(articles.rows);
+      return articles.rows;
     });
 };
