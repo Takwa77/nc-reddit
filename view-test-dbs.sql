@@ -1,11 +1,10 @@
 \c nc_news_test
 
-SELECT * FROM users;
+SELECT articles.*, COUNT(comments.article_id) AS comment_count
+FROM comments
+JOIN articles
+ON articles.article_id = comments.article_id
+AND comments.article_id=6
+GROUP BY articles.article_id;
 
- 
-UPDATE articles
-SET votes = votes + 100
-WHERE article_id = 6;
-
-SELECT * FROM articles WHERE votes=100;
 

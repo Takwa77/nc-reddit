@@ -38,7 +38,7 @@ describe("app", () => {
     });
   });
   describe("GET /api/articles/:article_id", () => {
-    test("status 200: returns an object containing article information", () => {
+    test.only("status 200: returns an object containing article information", () => {
       return request(app)
         .get("/api/articles/6")
         .expect(200)
@@ -51,6 +51,7 @@ describe("app", () => {
             topic: "mitch",
             created_at: "2020-10-18T01:00:00.000Z",
             votes: 0,
+            comment_count: "1",
           });
         });
     });
