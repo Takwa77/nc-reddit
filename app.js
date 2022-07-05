@@ -1,14 +1,19 @@
 const express = require("express");
 const app = express();
 const { getTopics } = require("./controllers/topics.js");
-const { getArticleByID } = require("./controllers/articles.js");
+const {
+  getArticleByID,
+  updateArticleVote,
+} = require("./controllers/articles.js");
+
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticleByID);
+app.patch("/api/articles/:article_id", updateArticleVote);
 
 app.use((err, req, res, next) => {
-  // handle custom errors
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
@@ -19,7 +24,7 @@ app.use("*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
+  if (err.code === "22P02" || err.code === "23502") {
     res.status(400).send({ msg: "bad request" });
   } else next(err);
 });
