@@ -3,7 +3,6 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const request = require("supertest");
 const app = require("../app");
-const { patch } = require("../app");
 
 beforeEach(() => {
   return seed(testData);
@@ -89,6 +88,42 @@ describe("app", () => {
             created_at: "2020-10-18T01:00:00.000Z",
             votes: 100,
           });
+        });
+    });
+    test("status 200: returns updated article", () => {
+      const decrement = { inc_votes: -50 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(decrement)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toEqual({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            topic: "mitch",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 50,
+          });
+        });
+    });
+    test("status 400: returns bad request for empty request body", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+    test("status 404: returns bad request for incorrect votes type", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "apples" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
         });
     });
   });
