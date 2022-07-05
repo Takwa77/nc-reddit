@@ -110,5 +110,13 @@ describe("app", () => {
           });
         });
     });
+    test("status 404`: responds with not found", () => {
+      return request(app)
+        .get("/api/not_an_endpoint")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("invalid path");
+        });
+    });
   });
 });
