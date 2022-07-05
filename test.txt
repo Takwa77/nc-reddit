@@ -1,6 +1,5 @@
 You are now connected to database "nc_news_test" as user "takwaeltabal".
- article_id | title | topic |    author     |           body            |     created_at      | votes | comment_count 
-------------+-------+-------+---------------+---------------------------+---------------------+-------+---------------
-          6 | A     | mitch | icellusedkars | Delicious tin of cat food | 2020-10-18 02:00:00 |     0 |             1
-(1 row)
+ article_id | title | topic | author | body | created_at | votes | comment_count 
+------------+-------+-------+--------+------+------------+-------+---------------
+(0 rows)
 

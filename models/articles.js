@@ -13,6 +13,7 @@ exports.selectArticleByID = (article_id) => {
       [article_id]
     )
     .then((article) => {
+      console.log(article.rows[0]);
       article.rows[0];
       if (!article.rows[0]) {
         return Promise.reject({
