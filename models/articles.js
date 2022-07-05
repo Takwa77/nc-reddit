@@ -3,12 +3,12 @@ const db = require("../db/connection");
 exports.selectArticleByID = (article_id) => {
   return db
     .query(
-      `SELECT articles.*, COUNT(comments.article_id)
+      `SELECT articles.*, COUNT(comments.article_id) 
       AS comment_count
       FROM comments
-      JOIN articles
-      ON articles.article_id = comments.article_id
-      AND comments.article_id=$1
+      RIGHT JOIN articles
+      ON articles.article_id = comments.article_id 
+      WHERE articles.article_id=$1
       GROUP BY articles.article_id;`,
       [article_id]
     )
