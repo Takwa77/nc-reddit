@@ -16,7 +16,6 @@ exports.selectArticleByID = (article_id) => {
 };
 
 exports.patchArticleVote = (article_id, inc_votes) => {
-  console.log("im in models");
   return db
     .query(
       `UPDATE articles
