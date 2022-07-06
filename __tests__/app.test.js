@@ -357,7 +357,7 @@ describe("app", () => {
         });
     });
   });
-  describe.only("POST /api/articles/:article_id/comments", () => {
+  describe("POST /api/articles/:article_id/comments", () => {
     test("status: 201 responds with comment newly added to the database", () => {
       const newComment = {
         username: "takwa",
@@ -385,6 +385,27 @@ describe("app", () => {
       return request(app)
         .post("/api/articles/3/comments")
         .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+    test("status: 400 responds with bad request when article_id is an inappropriate data type", () => {
+      const newComment = {
+        username: 1,
+        body: "it's nearly lunch time!!",
+      };
+      return request(app)
+        .post("/api/articles/sbc/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
+        });
+    });
+    test("status 404: returns 'article not found' when article_id doesn't exist", () => {
+      return request(app)
+        .post("/api/articles/2009/comments")
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("bad request");

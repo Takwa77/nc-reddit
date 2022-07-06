@@ -1,8 +1,5 @@
 You are now connected to database "nc_news_test" as user "takwaeltabal".
-INSERT 0 1
- comment_id | body | article_id | author | votes |         created_at         
-------------+------+------------+--------+-------+----------------------------
-         19 | body |          3 | takwa  |     0 | 2022-07-06 16:22:12.925903
-(1 row)
+ article_id 
+------------
+(0 rows)
 
-INSERT 0 1

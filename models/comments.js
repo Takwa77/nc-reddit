@@ -23,7 +23,6 @@ exports.selectCommentsByID = (article_id) => {
 };
 
 exports.insertComments = (article_id, username, body) => {
-  console.log(body, article_id, username);
   const insertUser = db.query(
     `INSERT INTO users (username, name) 
     VALUES 
@@ -38,8 +37,9 @@ exports.insertComments = (article_id, username, body) => {
         RETURNING *;`,
     [article_id, body, username]
   );
-  return Promise.all([insertUser, insertComment]).then((comment) => {
-    console.log(comment[1].rows[0]);
-    return comment[1].rows[0];
+
+  return Promise.all([insertUser, insertComment]).then((response) => {
+    const comment = response[1].rows[0];
+    return comment;
   });
 };
