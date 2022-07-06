@@ -7,6 +7,7 @@ const {
   getArticles,
 } = require("./controllers/articles.js");
 const { getUsers } = require("./controllers/users");
+const { getCommentsByID } = require("./controllers/comments");
 
 app.use(express.json());
 
@@ -15,9 +16,12 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", getArticleByID);
+
 app.patch("/api/articles/:article_id", updateArticleVote);
 
 app.get("/api/users", getUsers);
+
+app.get("/api/articles/:article_id/comments", getCommentsByID);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
