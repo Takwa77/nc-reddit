@@ -1,4 +1,4 @@
-const { insertComments } = require("../models/comments");
+const { insertComments, selectCommentsByID } = require("../models/comments");
 
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
@@ -7,4 +7,14 @@ exports.postComment = (req, res, next) => {
   insertComments().then((comment) => {
     res.status(201).send(comment);
   });
+};
+
+exports.getCommentsByID = (req, res, next) => {
+  const { article_id } = req.params;
+  selectCommentsByID(article_id)
+    .then((comments) => {
+      console.log({ comments });
+      res.status(200).send({ comments });
+    })
+    .catch(next);
 };
