@@ -9,3 +9,4 @@ WHERE articles.article_id=2
 GROUP BY articles.article_id;
 
 
+SELECT * FROM comments;

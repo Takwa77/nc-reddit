@@ -172,4 +172,25 @@ describe("app", () => {
         });
     });
   });
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("status 200: returns an array of comments corresponding to article_id", () => {
+      return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toHaveLength(2);
+          body.forEach((topic) => {
+            expect(topic).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(String),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+  });
 });
