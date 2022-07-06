@@ -24,8 +24,8 @@ exports.updateArticleVote = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  console.log("im in controllers");
   selectArticles().then((articles) => {
-    res.status(200).send(articles);
+    console.log(articles);
+    res.status(200).send({ articles });
   });
 };
