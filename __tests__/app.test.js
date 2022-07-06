@@ -312,7 +312,7 @@ describe("app", () => {
         });
     });
   });
-  describe.only("GET /api/articles/:article_id/comments", () => {
+  describe("GET /api/articles/:article_id/comments", () => {
     test("status 200: returns an array of comments corresponding to article_id", () => {
       return request(app)
         .get("/api/articles/5/comments")
@@ -330,6 +330,30 @@ describe("app", () => {
               })
             );
           });
+        });
+    });
+    test("status 200: returns empty array for article_id with no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toEqual([]);
+        });
+    });
+    test("status 404: returns 'article not found'", () => {
+      return request(app)
+        .get("/api/articles/2009/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("article not found");
+        });
+    });
+    test("status 400: returns 'bad request'", () => {
+      return request(app)
+        .get("/api/articles/notAnId/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
         });
     });
   });
