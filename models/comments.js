@@ -10,18 +10,14 @@ const checkExists = async (table, column, value) => {
 };
 
 exports.selectCommentsByID = (article_id) => {
-  return db
-    .query(
-      `SELECT comments.author, comments.body, comments.comment_id, comments.created_at, comments.votes FROM comments WHERE comments.article_id=$1;`,
-      [article_id]
-    )
-    .then((comments) => {
-      return Promise.all([
-        checkExists("articles", "article_id", article_id),
-        comments,
-      ]);
+  return checkExists("articles", "article_id", article_id)
+    .then((output) => {
+      return db.query(
+        `SELECT comments.author, comments.body, comments.comment_id, comments.created_at, comments.votes FROM comments WHERE comments.article_id=$1;`,
+        [article_id]
+      );
     })
     .then((array) => {
-      return array[1].rows;
+      return array.rows;
     });
 };
