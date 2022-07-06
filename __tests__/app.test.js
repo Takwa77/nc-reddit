@@ -51,6 +51,24 @@ describe("app", () => {
             topic: "mitch",
             created_at: "2020-10-18T01:00:00.000Z",
             votes: 0,
+            comment_count: "1",
+          });
+        });
+    });
+    test("status 200: successfully returns an object with 0 comment_count", () => {
+      return request(app)
+        .get("/api/articles/2")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toEqual({
+            article_id: 2,
+            title: "Sony Vaio; or, The Laptop",
+            topic: "mitch",
+            author: "icellusedkars",
+            body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
+            created_at: "2020-10-16T05:03:00.000Z",
+            votes: 0,
+            comment_count: "0",
           });
         });
     });
@@ -171,6 +189,144 @@ describe("app", () => {
                 created_at: expect.any(String),
                 votes: expect.any(Number),
                 comment_count: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+    test("status 200: array is sorted by date in descending order", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toEqual([
+            {
+              author: "icellusedkars",
+              title: "Eight pug gifs that remind me of mitch",
+              article_id: 3,
+              topic: "mitch",
+              created_at: `2020-11-03T09:12:00.000Z`,
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "icellusedkars",
+              title: "A",
+              article_id: 6,
+              topic: "mitch",
+              created_at: "2020-10-18T01:00:00.000Z",
+              votes: 0,
+              comment_count: 1,
+            },
+            {
+              author: "icellusedkars",
+              title: "Sony Vaio; or, The Laptop",
+              article_id: 2,
+              topic: "mitch",
+              created_at: "2020-10-16T05:03:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "butter_bridge",
+              title: "Moustache",
+              article_id: 12,
+              topic: "mitch",
+              created_at: "2020-10-11T11:24:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "rogersop",
+              title: "UNCOVERED: catspiracy to bring down democracy",
+              article_id: 5,
+              topic: "cats",
+              created_at: "2020-08-03T13:14:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "butter_bridge",
+              title: "Living in the shadow of a great man",
+              article_id: 1,
+              topic: "mitch",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              comment_count: 11,
+            },
+            {
+              author: "butter_bridge",
+              title: "They're not exactly dogs, are they?",
+              article_id: 9,
+              topic: "mitch",
+              created_at: "2020-06-06T09:10:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "rogersop",
+              title: "Seven inspirational thought leaders from Manchester UK",
+              article_id: 10,
+              topic: "mitch",
+              created_at: "2020-05-14T04:15:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "rogersop",
+              title: "Student SUES Mitch!",
+              article_id: 4,
+              topic: "mitch",
+              created_at: "2020-05-06T01:14:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Does Mitch predate civilisation?",
+              article_id: 8,
+              topic: "mitch",
+              created_at: "2020-04-17T01:08:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Am I a cat?",
+              article_id: 11,
+              topic: "mitch",
+              created_at: "2020-01-15T22:21:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Z",
+              article_id: 7,
+              topic: "mitch",
+              created_at: "2020-01-07T14:08:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+          ]);
+        });
+    });
+  });
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("status 200: returns an array of comments corresponding to article_id", () => {
+      return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toHaveLength(2);
+          body.forEach((topic) => {
+            expect(topic).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(String),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
               })
             );
           });
