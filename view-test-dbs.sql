@@ -1,4 +1,11 @@
 \c nc_news_test
 
-SELECT comments.author, comments.body, comments.comment_id, comments.created_at, comments.votes
- FROM comments WHERE comments.article_id = 5;
+
+INSERT INTO users (username, name) 
+VALUES 
+('takwa', 'TAKWA');
+INSERT INTO comments 
+(article_id, body, author)
+VALUES
+(3, 'body', 'takwa')
+RETURNING *; 

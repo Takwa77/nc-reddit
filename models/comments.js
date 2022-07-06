@@ -22,6 +22,24 @@ exports.selectCommentsByID = (article_id) => {
     });
 };
 
-exports.insertComments = () => {
-  console.log("im in comments models");
+exports.insertComments = (article_id, username, body) => {
+  console.log(body, article_id, username);
+  const insertUser = db.query(
+    `INSERT INTO users (username, name) 
+    VALUES 
+    ($1, $1);`,
+    [username]
+  );
+  const insertComment = db.query(
+    `INSERT INTO comments 
+        (article_id, body, author)
+        VALUES
+        ($1, $2, $3)
+        RETURNING *;`,
+    [article_id, body, username]
+  );
+  return Promise.all([insertUser, insertComment]).then((comment) => {
+    console.log(comment[1].rows[0]);
+    return comment[1].rows[0];
+  });
 };

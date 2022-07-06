@@ -358,7 +358,7 @@ describe("app", () => {
     });
   });
   describe.only("POST /api/articles/:article_id/comments", () => {
-    test("status:201, responds with comment newly added to the database", () => {
+    test("status: 201 responds with comment newly added to the database", () => {
       const newComment = {
         username: "takwa",
         body: "it's nearly lunch time!!",
@@ -376,6 +376,18 @@ describe("app", () => {
             votes: 0,
             created_at: expect.any(String),
           });
+        });
+    });
+    test("status: 400 responds with bad request when comment to be added is missing a required field", () => {
+      const newComment = {
+        body: "it's nearly lunch time!!",
+      };
+      return request(app)
+        .post("/api/articles/3/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("bad request");
         });
     });
   });
