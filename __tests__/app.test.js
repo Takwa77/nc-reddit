@@ -173,7 +173,7 @@ describe("app", () => {
     });
   });
   describe("GET /api/articles", () => {
-    test.only("status 200: returns an array of article objects", () => {
+    test("status 200: returns an array of article objects", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -329,6 +329,28 @@ describe("app", () => {
                 body: expect.any(String),
               })
             );
+          });
+        });
+    });
+  });
+  describe.only("POST /api/articles/:article_id/comments", () => {
+    test("status:201, responds with comment newly added to the database", () => {
+      const newComment = {
+        username: "takwa",
+        body: "it's nearly lunch time!!",
+      };
+      return request(app)
+        .post("/api/articles/3/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.comment).toEqual({
+            author: "takwa",
+            body: "it's nearly lunch time!!",
+            article_id: 3,
+            comment_id: expect.any(Number),
+            votes: 0,
+            created_at: expect.any(String),
           });
         });
     });
