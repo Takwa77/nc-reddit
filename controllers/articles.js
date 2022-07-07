@@ -24,7 +24,9 @@ exports.updateArticleVote = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  selectArticles().then((articles) => {
+  const { sort_by } = req.query;
+  selectArticles(sort_by).then((articles) => {
+    console.log(articles);
     res.status(200).send({ articles });
   });
 };

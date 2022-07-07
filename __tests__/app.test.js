@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const request = require("supertest");
 const app = require("../app");
+const { get } = require("express/lib/response");
 
 beforeEach(() => {
   return seed(testData);
@@ -172,7 +173,7 @@ describe("app", () => {
         });
     });
   });
-  describe("GET /api/articles", () => {
+  describe.only("GET /api/articles", () => {
     test("status 200: returns an array of article objects", () => {
       return request(app)
         .get("/api/articles")
@@ -309,6 +310,69 @@ describe("app", () => {
               comment_count: 0,
             },
           ]);
+        });
+    });
+    test("status 200: accepts sort_by query with votes", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("votes", {
+            descending: true,
+            coerce: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with author", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("author", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with title", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("title", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with article_id", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("article_id", {
+            descending: true,
+            coerce: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with topic", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("topic", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with comment_count", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comments.article_id")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("comment_count", {
+            descending: true,
+            coerce: true,
+          });
         });
     });
   });

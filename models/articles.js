@@ -37,14 +37,15 @@ exports.patchArticleVote = (article_id, inc_votes) => {
     });
 };
 
-exports.selectArticles = () => {
+exports.selectArticles = (sort_by = "created_at") => {
+  console.log(sort_by);
   return db
     .query(
       `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.article_id):: INT AS comment_count 
       FROM articles
       LEFT JOIN comments ON articles.article_id = comments.article_id
       GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;`
+      ORDER BY articles.${sort_by} DESC;`
     )
     .then((articles) => {
       return articles.rows;
