@@ -358,10 +358,10 @@ describe("app", () => {
     });
   });
   describe("POST /api/articles/:article_id/comments", () => {
-    test("status: 201 responds with comment newly added to the database", () => {
+    test("status: 201 responds with new comment", () => {
       const newComment = {
-        username: "takwa",
-        body: "it's nearly lunch time!!",
+        username: "icellusedkars",
+        body: "this is a new comment",
       };
       return request(app)
         .post("/api/articles/3/comments")
@@ -369,13 +369,26 @@ describe("app", () => {
         .expect(201)
         .then(({ body }) => {
           expect(body.comment).toEqual({
-            author: "takwa",
-            body: "it's nearly lunch time!!",
+            comment_id: 19,
+            body: "this is a new comment",
             article_id: 3,
-            comment_id: expect.any(Number),
+            author: "icellusedkars",
             votes: 0,
             created_at: expect.any(String),
           });
+        });
+    });
+    test("status: 404 responds with 'user not found' when username isn't in users table", () => {
+      const newComment = {
+        username: "takwa",
+        body: "it's nearly lunch time!!",
+      };
+      return request(app)
+        .post("/api/articles/3/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("user not found");
         });
     });
     test("status: 400 responds with bad request when comment to be added is missing a required field", () => {
@@ -390,25 +403,17 @@ describe("app", () => {
           expect(body.msg).toBe("bad request");
         });
     });
-    test("status: 400 responds with bad request when article_id is an inappropriate data type", () => {
+    test("status 404: returns 'article not found' when article_id doesn't exist", () => {
       const newComment = {
-        username: 1,
-        body: "it's nearly lunch time!!",
+        username: "icellusedkars",
+        body: "this is a new comment",
       };
       return request(app)
-        .post("/api/articles/sbc/comments")
-        .send(newComment)
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("bad request");
-        });
-    });
-    test("status 404: returns 'article not found' when article_id doesn't exist", () => {
-      return request(app)
         .post("/api/articles/2009/comments")
-        .expect(400)
+        .send(newComment)
+        .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("bad request");
+          expect(body.msg).toBe("article not found");
         });
     });
   });
