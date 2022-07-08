@@ -383,7 +383,7 @@ describe("app", () => {
           expect(body.msg).toBe("invalid sort query");
         });
     });
-    test("status 200: array is sorted by date in descending order by default", () => {
+    test("status 200: array is sorted by date in ascending order", () => {
       return request(app)
         .get("/api/articles?order_by=ASC")
         .expect(200)
