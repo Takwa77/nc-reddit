@@ -417,14 +417,9 @@ describe("app", () => {
         });
     });
   });
-  describe.only("DELETE /api/comments/:comment_id", () => {
+  describe("DELETE /api/comments/:comment_id", () => {
     test("status:204, responds with an empty response body", () => {
-      return request(app)
-        .delete("/api/comments/5")
-        .expect(204)
-        .then(({ body }) => {
-          expect(body).toEqual({});
-        });
+      return request(app).delete("/api/comments/5").expect(204);
     });
     test("status 404: responds with 'comment does not exist'", () => {
       return request(app)
