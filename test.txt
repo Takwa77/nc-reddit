@@ -1,7 +1,23 @@
 You are now connected to database "nc_news_test" as user "takwaeltabal".
- comment_id |          body          | article_id |    author     | votes |     created_at      
-------------+------------------------+------------+---------------+-------+---------------------
-         10 | git push origin master |          3 | icellusedkars |     0 | 2020-06-20 08:24:00
-         11 | Ambidextrous marsupial |          3 | icellusedkars |     0 | 2020-09-20 00:10:00
-(2 rows)
+ comment_id 
+------------
+          1
+          2
+          3
+          4
+          5
+          6
+          7
+          8
+          9
+         10
+         11
+         12
+         13
+         14
+         15
+         16
+         17
+         18
+(18 rows)
 

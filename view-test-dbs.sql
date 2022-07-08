@@ -1,3 +1,3 @@
 \c nc_news_test
 
-SELECT * FROM comments WHERE article_id=3;
+SELECT comment_id FROM comments; 
