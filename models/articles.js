@@ -37,17 +37,44 @@ exports.patchArticleVote = (article_id, inc_votes) => {
     });
 };
 
-exports.selectArticles = (sort_by = "created_at") => {
-  console.log(sort_by);
-  return db
-    .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.article_id):: INT AS comment_count 
-      FROM articles
-      LEFT JOIN comments ON articles.article_id = comments.article_id
-      GROUP BY articles.article_id
-      ORDER BY articles.${sort_by} DESC;`
-    )
-    .then((articles) => {
-      return articles.rows;
-    });
+exports.selectArticles = (
+  sort_by = "created_at",
+  order_by = "DESC",
+  filter_by
+) => {
+  const validSortOptions = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const validOrderOptions = ["ASC", "DESC"];
+
+  const queryValues = [];
+  let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.article_id):: INT AS comment_count 
+  FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+  if (!validSortOptions.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "invalid sort query" });
+  }
+
+  if (!validOrderOptions.includes(order_by)) {
+    return Promise.reject({ status: 400, msg: "invalid order query" });
+  }
+
+  if (filter_by) {
+    queryStr += ` WHERE topic=$1`;
+    queryValues.push(filter_by);
+  }
+
+  queryStr += ` GROUP BY articles.article_id
+  ORDER BY ${sort_by} ${order_by}`;
+
+  return db.query(queryStr, queryValues).then((articles) => {
+    return articles.rows;
+  });
 };
