@@ -417,4 +417,25 @@ describe("app", () => {
         });
     });
   });
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("status:204, responds with an empty response body", () => {
+      return request(app).delete("/api/comments/5").expect(204);
+    });
+    test("status 404: responds with 'comment does not exist'", () => {
+      return request(app)
+        .delete("/api/comments/2009")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("comment 2009 does not exist");
+        });
+    });
+    test("status 400: responds with 'bad request'", () => {
+      return request(app)
+        .delete("/api/comments/not-a-path")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("comment ID should be a number");
+        });
+    });
+  });
 });
