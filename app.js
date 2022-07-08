@@ -7,7 +7,7 @@ const {
   getArticles,
 } = require("./controllers/articles.js");
 const { getUsers } = require("./controllers/users");
-const { getCommentsByID } = require("./controllers/comments");
+const { postComment, getCommentsByID } = require("./controllers/comments");
 
 app.use(express.json());
 
@@ -23,20 +23,22 @@ app.get("/api/users", getUsers);
 
 app.get("/api/articles/:article_id/comments", getCommentsByID);
 
+app.post("/api/articles/:article_id/comments", postComment);
+
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
 });
 
-app.use("*", (req, res) => {
-  res.status(404).send({ msg: "invalid path" });
-});
-
 app.use((err, req, res, next) => {
   if (err.code === "22P02" || err.code === "23502") {
     res.status(400).send({ msg: "bad request" });
   } else next(err);
+});
+
+app.use("*", (req, res) => {
+  res.status(404).send({ msg: "invalid path" });
 });
 
 app.use((err, req, res, next) => {

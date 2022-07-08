@@ -1,7 +1,7 @@
 You are now connected to database "nc_news_test" as user "takwaeltabal".
-    author     |                                                     body                                                     | comment_id |     created_at      | votes 
----------------+--------------------------------------------------------------------------------------------------------------+------------+---------------------+-------
- icellusedkars | What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge. |         14 | 2020-06-09 06:00:00 |    16
- butter_bridge | I am 100% sure that we're not completely sure.                                                               |         15 | 2020-11-24 00:08:00 |     1
+ comment_id |          body          | article_id |    author     | votes |     created_at      
+------------+------------------------+------------+---------------+-------+---------------------
+         10 | git push origin master |          3 | icellusedkars |     0 | 2020-06-20 08:24:00
+         11 | Ambidextrous marsupial |          3 | icellusedkars |     0 | 2020-09-20 00:10:00
 (2 rows)
 
