@@ -7,7 +7,11 @@ const {
   getArticles,
 } = require("./controllers/articles.js");
 const { getUsers } = require("./controllers/users");
-const { getCommentsByID } = require("./controllers/comments");
+const {
+  postComment,
+  getCommentsByID,
+  removeComment,
+} = require("./controllers/comments");
 
 app.use(express.json());
 
@@ -23,14 +27,14 @@ app.get("/api/users", getUsers);
 
 app.get("/api/articles/:article_id/comments", getCommentsByID);
 
+app.post("/api/articles/:article_id/comments", postComment);
+
+app.delete("/api/comments/:comment_id", removeComment);
+
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
-});
-
-app.use("*", (req, res) => {
-  res.status(404).send({ msg: "invalid path" });
 });
 
 app.use((err, req, res, next) => {
@@ -42,6 +46,10 @@ app.use((err, req, res, next) => {
   ) {
     res.status(400).send({ msg: "bad request" });
   } else next(err);
+});
+
+app.use("*", (req, res) => {
+  res.status(404).send({ msg: "invalid path" });
 });
 
 app.use((err, req, res, next) => {
