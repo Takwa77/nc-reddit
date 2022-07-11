@@ -627,6 +627,22 @@ describe("app", () => {
           ]);
         });
     });
+    test("status 200: accepts filter_by query that exists but doesn't have any articles associated with it", () => {
+      return request(app)
+        .get("/api/articles?filter_by=paper")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toEqual([]);
+        });
+    });
+    test("status 404: returns error message for invalid filter_by query", () => {
+      return request(app)
+        .get("/api/articles?filter_by=news")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toEqual("invalid filter query");
+        });
+    });
   });
   describe("GET /api/articles/:article_id/comments", () => {
     test("status 200: returns an array of comments corresponding to article_id", () => {

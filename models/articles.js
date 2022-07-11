@@ -53,6 +53,8 @@ exports.selectArticles = (
   ];
   const validOrderOptions = ["ASC", "DESC"];
 
+  const validFilterOptions = ["mitch", "paper", "cats", undefined];
+
   const queryValues = [];
   let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.article_id):: INT AS comment_count 
   FROM articles
@@ -61,7 +63,9 @@ exports.selectArticles = (
   if (!validSortOptions.includes(sort_by)) {
     return Promise.reject({ status: 400, msg: "invalid sort query" });
   }
-
+  if (!validFilterOptions.includes(filter_by)) {
+    return Promise.reject({ status: 404, msg: "invalid filter query" });
+  }
   if (!validOrderOptions.includes(order_by)) {
     return Promise.reject({ status: 400, msg: "invalid order query" });
   }
