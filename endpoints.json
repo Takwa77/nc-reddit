@@ -28,9 +28,9 @@
     "description": "serves an object of the corresponding article_id",
     "queries": [],
     "params": "article_id",
-    "example params": 6,
+    "exampleParams": 6,
     "exampleResponse": {
-      "article": [
+      "article": 
         {
           "article_id": 6,
           "title": "A",
@@ -41,16 +41,15 @@
           "votes": 0,
           "comment_count": "1"
         }
-      ]
     }
   },
   "PATCH /api/articles/:article_id": {
     "description": "serves an object with the article updated with new number of votes",
     "queries": [],
     "params": "article_id",
-    "example params": 6,
+    "exampleParams": 6,
     "body": "inc_votes",
-    "example body": 100,
+    "exampleBody": 100,
     "exampleResponse": {
       "article": [
         {
@@ -83,9 +82,9 @@
     "description": "serves an array of all comments corresponding to article_id",
     "queries": [],
     "params": "article_id",
-    "example params": 5,
+    "exampleParams": 5,
     "exampleResponse": {
-      "users": [
+      "comment": [
         {
           "body": "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
           "votes": 16,
@@ -95,5 +94,30 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "serves an object with the article updated with new number of votes",
+    "queries": [],
+    "params": "article_id",
+    "exampleParams": 3,
+    "body": ["username", "body"],
+    "exampleBody": ["icellusedkars", "this is a new comment"],
+    "exampleResponse": {
+      "comment": 
+        {
+          "comment_id": 19,
+          "body": "this is a new comment",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": 1591682400000
+        }
+    }
+  },
+  "DELETE /api/comments/comment_id": {
+    "description": "deletes comment",
+    "queries": [],
+    "params": "comment_id",
+    "exampleParams": 5
   }
 }
