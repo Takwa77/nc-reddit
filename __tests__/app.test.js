@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const request = require("supertest");
 const app = require("../app");
+const { get } = require("express/lib/response");
 
 beforeEach(() => {
   return seed(testData);
@@ -163,7 +164,7 @@ describe("app", () => {
           });
         });
     });
-    test("status 404`: responds with not found", () => {
+    test("status 404: responds with not found", () => {
       return request(app)
         .get("/api/not_an_endpoint")
         .expect(404)
@@ -194,7 +195,7 @@ describe("app", () => {
           });
         });
     });
-    test("status 200: array is sorted by date in descending order", () => {
+    test("status 200: array is sorted by date in descending order by default", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -309,6 +310,337 @@ describe("app", () => {
               comment_count: 0,
             },
           ]);
+        });
+    });
+    test("status 200: accepts sort_by query with votes", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("votes", {
+            descending: true,
+            coerce: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with author", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("author", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with title", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("title", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with article_id", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("article_id", {
+            descending: true,
+            coerce: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with topic", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("topic", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: accepts sort_by query with comment_count", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("comment_count", {
+            descending: true,
+            coerce: true,
+          });
+        });
+    });
+    test("status 400: bad request for invalid sort_by option", () => {
+      return request(app)
+        .get("/api/articles?sort_by=not_an_option")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("invalid sort query");
+        });
+    });
+    test("status 200: array is sorted by date in ascending order", () => {
+      return request(app)
+        .get("/api/articles?order_by=ASC")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toEqual([
+            {
+              author: "icellusedkars",
+              title: "Z",
+              article_id: 7,
+              topic: "mitch",
+              created_at: "2020-01-07T14:08:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Am I a cat?",
+              article_id: 11,
+              topic: "mitch",
+              created_at: "2020-01-15T22:21:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Does Mitch predate civilisation?",
+              article_id: 8,
+              topic: "mitch",
+              created_at: "2020-04-17T01:08:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "rogersop",
+              title: "Student SUES Mitch!",
+              article_id: 4,
+              topic: "mitch",
+              created_at: "2020-05-06T01:14:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "rogersop",
+              title: "Seven inspirational thought leaders from Manchester UK",
+              article_id: 10,
+              topic: "mitch",
+              created_at: "2020-05-14T04:15:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "butter_bridge",
+              title: "They're not exactly dogs, are they?",
+              article_id: 9,
+              topic: "mitch",
+              created_at: "2020-06-06T09:10:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "butter_bridge",
+              title: "Living in the shadow of a great man",
+              article_id: 1,
+              topic: "mitch",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              comment_count: 11,
+            },
+            {
+              author: "rogersop",
+              title: "UNCOVERED: catspiracy to bring down democracy",
+              article_id: 5,
+              topic: "cats",
+              created_at: "2020-08-03T13:14:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "butter_bridge",
+              title: "Moustache",
+              article_id: 12,
+              topic: "mitch",
+              created_at: "2020-10-11T11:24:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Sony Vaio; or, The Laptop",
+              article_id: 2,
+              topic: "mitch",
+              created_at: "2020-10-16T05:03:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "A",
+              article_id: 6,
+              topic: "mitch",
+              created_at: "2020-10-18T01:00:00.000Z",
+              votes: 0,
+              comment_count: 1,
+            },
+            {
+              author: "icellusedkars",
+              title: "Eight pug gifs that remind me of mitch",
+              article_id: 3,
+              topic: "mitch",
+              created_at: "2020-11-03T09:12:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            },
+          ]);
+        });
+    });
+    test("status 400:  bad request for invalid order_by option", () => {
+      return request(app)
+        .get("/api/articles?order_by=not_an_order")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toEqual("invalid order query");
+        });
+    });
+    test("status 200: accepts sort_by query with article_id", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("article_id", {
+            descending: true,
+            coerce: true,
+          });
+        });
+    });
+    test("status 200: accepts filter_by query", () => {
+      return request(app)
+        .get("/api/articles?filter_by=mitch")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toEqual([
+            {
+              author: "icellusedkars",
+              title: "Eight pug gifs that remind me of mitch",
+              article_id: 3,
+              topic: "mitch",
+              created_at: `2020-11-03T09:12:00.000Z`,
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "icellusedkars",
+              title: "A",
+              article_id: 6,
+              topic: "mitch",
+              created_at: "2020-10-18T01:00:00.000Z",
+              votes: 0,
+              comment_count: 1,
+            },
+            {
+              author: "icellusedkars",
+              title: "Sony Vaio; or, The Laptop",
+              article_id: 2,
+              topic: "mitch",
+              created_at: "2020-10-16T05:03:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "butter_bridge",
+              title: "Moustache",
+              article_id: 12,
+              topic: "mitch",
+              created_at: "2020-10-11T11:24:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "butter_bridge",
+              title: "Living in the shadow of a great man",
+              article_id: 1,
+              topic: "mitch",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              comment_count: 11,
+            },
+            {
+              author: "butter_bridge",
+              title: "They're not exactly dogs, are they?",
+              article_id: 9,
+              topic: "mitch",
+              created_at: "2020-06-06T09:10:00.000Z",
+              votes: 0,
+              comment_count: 2,
+            },
+            {
+              author: "rogersop",
+              title: "Seven inspirational thought leaders from Manchester UK",
+              article_id: 10,
+              topic: "mitch",
+              created_at: "2020-05-14T04:15:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "rogersop",
+              title: "Student SUES Mitch!",
+              article_id: 4,
+              topic: "mitch",
+              created_at: "2020-05-06T01:14:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Does Mitch predate civilisation?",
+              article_id: 8,
+              topic: "mitch",
+              created_at: "2020-04-17T01:08:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Am I a cat?",
+              article_id: 11,
+              topic: "mitch",
+              created_at: "2020-01-15T22:21:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+            {
+              author: "icellusedkars",
+              title: "Z",
+              article_id: 7,
+              topic: "mitch",
+              created_at: "2020-01-07T14:08:00.000Z",
+              votes: 0,
+              comment_count: 0,
+            },
+          ]);
+        });
+    });
+    test("status 200: accepts filter_by query that exists but doesn't have any articles associated with it", () => {
+      return request(app)
+        .get("/api/articles?filter_by=paper")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toEqual([]);
+        });
+    });
+    test("status 404: returns error message for invalid filter_by query", () => {
+      return request(app)
+        .get("/api/articles?filter_by=news")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toEqual("invalid filter query");
         });
     });
   });

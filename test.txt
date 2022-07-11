@@ -1,23 +1,5 @@
 You are now connected to database "nc_news_test" as user "takwaeltabal".
- comment_id 
-------------
-          1
-          2
-          3
-          4
-          5
-          6
-          7
-          8
-          9
-         10
-         11
-         12
-         13
-         14
-         15
-         16
-         17
-         18
-(18 rows)
+ author | title | article_id | topic | created_at | votes | comment_count 
+--------+-------+------------+-------+------------+-------+---------------
+(0 rows)
 
